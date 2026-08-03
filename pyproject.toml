@@ -1,0 +1,22 @@
+[project]
+name = "url-shortner"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Abhishekkjcodes", email = "155182094+Abhishekkjcodes@users.noreply.github.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.5",
+    "fastapi[standard]>=0.141.1",
+    "psycopg[binary]>=3.3.4",
+    "sqlalchemy>=2.0.51",
+]
+
+[project.scripts]
+url-shortner = "url_shortner:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
