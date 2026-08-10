@@ -8,9 +8,9 @@ from fastapi.security import OAuth2PasswordBearer
 from .configs import settings
 from . import schemas
 
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 oauth2_scheme=OAuth2PasswordBearer(tokenUrl="login") # token url is just for the docs to help in authorize button non needed
 
