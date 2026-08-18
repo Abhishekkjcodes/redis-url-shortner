@@ -5,12 +5,14 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from ..database import get_db
 from .. import schemas,models,utils,oauth2
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 router=APIRouter( tags=["login"])
 
+
 @router.post("/login",response_model=schemas.Token)
-def login(user_credentials:schemas.login,db:Session=Depends(get_db)):
+def login(user_credentials:OAuth2PasswordRequestForm=Depends(),db:Session=Depends(get_db)):
     user=db.scalars(select(models.User).where(models.User.email==user_credentials.username)).first()
     if(not user):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid credentials")
