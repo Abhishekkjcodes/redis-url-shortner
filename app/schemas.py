@@ -5,9 +5,9 @@ from pydantic import BaseModel, ConfigDict, EmailStr
 
 class User(BaseModel):
     name: str
-    age: int
 
 class CreateUser(User):
+    name: str
     email: EmailStr
     password: str
 
@@ -20,16 +20,21 @@ class UserInfo(BaseModel):
     active_links: ListUrls
     deactivated_links: ListUrls
     model_config = ConfigDict(from_attributes=True)
+
 class Urls(BaseModel):
     original_url: str
-    alias: str
-class UrlsInfo(Urls):
+    shortened: str
 
+class UrlsInfo(Urls):
     clicks: int
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
-class UrlsCreate(Urls):
-    expire_time:datetime
+
+class CreateUrls(BaseModel):
+    original: str
+    alias: str | None
+    expire_at:datetime | None
+    active: bool=True
     view_once: bool=False
 class ListUrls(BaseModel):
     urls_list: List[Urls]
@@ -42,4 +47,7 @@ class login(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type:str
+
+class TokenData(BaseModel):
+    id: int
 
