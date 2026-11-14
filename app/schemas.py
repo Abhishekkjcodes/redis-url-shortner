@@ -17,23 +17,29 @@ class UserLogin(BaseModel):
 class UserInfo(BaseModel):
     name:str
     email:EmailStr
-    active_links: ListUrls
-    deactivated_links: ListUrls
+    active_links: List[Urls]
+    deactivated_links: List[Urls]
     model_config = ConfigDict(from_attributes=True)
 
 class Urls(BaseModel):
-    original_url: str
+    id:int
+    original: str
     shortened: str
-
+    model_config = ConfigDict(from_attributes=True)
 class UrlsInfo(Urls):
+    alias:str
     clicks: int
     created_at: datetime
+    active: bool
+    view_once: bool
+    expire_at: datetime | None
+    user: User
     model_config = ConfigDict(from_attributes=True)
 
 class CreateUrls(BaseModel):
     original: str
-    alias: str | None
-    expire_at:datetime | None
+    alias: str | None=None
+    expire_at:datetime | None =None
     active: bool=True
     view_once: bool=False
 class ListUrls(BaseModel):

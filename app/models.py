@@ -14,7 +14,7 @@ class Url(Base):
     created_at:Mapped[datetime]=mapped_column(TIMESTAMP(timezone=True),nullable=False,server_default=text('now()'))
     view_once:Mapped[bool]=mapped_column(server_default=text('false'))
     clicks:Mapped[int]=mapped_column(nullable=False,server_default="0")
-    expire_at:Mapped[datetime|None]=mapped_column(TIMESTAMP(timezone=True),nullable=True,server_default=text('now()'))
+    expire_at:Mapped[datetime|None]=mapped_column(TIMESTAMP(timezone=True),nullable=True)
     user_id:Mapped[int]=mapped_column(Integer,ForeignKey("users.id",ondelete="CASCADE"),nullable=False)
 
     user: Mapped["User"] = relationship(back_populates="urls")

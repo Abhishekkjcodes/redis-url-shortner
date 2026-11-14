@@ -5,8 +5,11 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from fastapi.security import OAuth2PasswordBearer
 
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from .database import get_db
 from .configs import settings
-from . import schemas
+from . import schemas, models
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
@@ -24,7 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def verify_access_token(token:schemas.Token,credentials_exception):
+def verify_access_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         uid = payload.get("user_id")
@@ -36,10 +39,14 @@ def verify_access_token(token:schemas.Token,credentials_exception):
     
     return token_data.id
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    return verify_access_token(token,credentials_exception)
+    user_id = verify_access_token(token, credentials_exception)
+    user = db.scalar(select(models.User).where(models.User.id == user_id))
+    if not user:
+        raise credentials_exception
+    return user_id
